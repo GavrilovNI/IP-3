@@ -225,7 +225,7 @@ namespace IP1
 
         private void Run_Click(object sender, RoutedEventArgs e)
         {
-            FilterCannyEdge filter = new FilterCannyEdge();
+            FilterHough filter = new FilterHough();
 
             result1 = filter.Run(loadedImage);
 
