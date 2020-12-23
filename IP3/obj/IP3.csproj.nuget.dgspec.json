@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nikita\\source\\repos\\IP3\\IP3.csproj": {}
+    "C:\\Users\\Nikita\\Desktop\\IP-3\\IP3\\IP3.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nikita\\source\\repos\\IP3\\IP3.csproj": {
+    "C:\\Users\\Nikita\\Desktop\\IP-3\\IP3\\IP3.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nikita\\source\\repos\\IP3\\IP3.csproj",
+        "projectUniqueName": "C:\\Users\\Nikita\\Desktop\\IP-3\\IP3\\IP3.csproj",
         "projectName": "IP3",
-        "projectPath": "C:\\Users\\Nikita\\source\\repos\\IP3\\IP3.csproj",
+        "projectPath": "C:\\Users\\Nikita\\Desktop\\IP-3\\IP3\\IP3.csproj",
         "packagesPath": "C:\\Users\\Nikita\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nikita\\source\\repos\\IP3\\obj\\",
+        "outputPath": "C:\\Users\\Nikita\\Desktop\\IP-3\\IP3\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Nikita\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,14 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "OpenCvSharp4": {
+              "target": "Package",
+              "version": "[4.5.0.20201013, )"
+            },
+            "OpenCvSharp4.Windows": {
+              "target": "Package",
+              "version": "[4.5.0.20201013, )"
+            },
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[5.0.0, )"

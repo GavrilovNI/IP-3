@@ -11,10 +11,19 @@ namespace IP1
 {
     class FilterHough : Filter
     {
+        private int lowDF;
+        private int highDF;
+
+        public FilterHough(int lowDF, int highDF)
+        {
+            this.lowDF = lowDF;
+            this.highDF = highDF;
+        }
+
         public override Image Run(Image image)
         {
             int cross_num = 100;
-            FilterCannyEdge filter = new FilterCannyEdge();
+            FilterCannyEdge filter = new FilterCannyEdge(lowDF, highDF);
 
             Bitmap inputBitmap = filter.Run(image);
             int width = inputBitmap.Width;

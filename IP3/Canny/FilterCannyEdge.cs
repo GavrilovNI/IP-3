@@ -10,8 +10,22 @@ namespace IP1.Imaging.Filters
 {
     public class FilterCannyEdge : Filter
     {
+        private const int low = 0;
+        private const int mid = 127;
+        private const int high = 255;
+
         private Filter filterGrayScale = new FilterGrayScale(FilterGrayScale.GrayScaleType.Gimp);
-        private Filter filterBlur = new FilterGaussian();
+        //private Filter filterBlur = new FilterGaussian();
+        private Filter filterBlur = new FilterMedian(2);
+
+        private int lowDF;
+        private int highDF;
+
+        public FilterCannyEdge(int lowDF, int highDF)
+        {
+            this.lowDF = lowDF;
+            this.highDF = highDF;
+        }
 
 
         protected float GetGradientAngle(int posX, int posY, Image image, out ColorRGB color)
@@ -66,6 +80,78 @@ namespace IP1.Imaging.Filters
                     ColorRGB color;
                     gradientAngles[y, x] = GetGradientAngle(x, y, image, out color);
                     result[y, x] = color;
+                }
+            }
+
+            return result;
+        }
+
+        protected void Tracing(ref Image image, int x, int y)
+        {
+            int nx, ny;
+
+            nx = x - 1; ny = y;
+
+            ColorRGB nColor = new ColorRGB(high, high, high);
+
+            if (nx >= 0 && nx < image.Width && ny >= 0 && ny < image.Height && image[ny, nx].r == 127)
+            {
+                image[ny, nx] = nColor;
+                Tracing(ref image, nx, ny);
+            }
+            nx = x - 1; ny = y - 1;
+            if (nx >= 0 && nx < image.Width && ny >= 0 && ny < image.Height && image[ny, nx].r == 127)
+            {
+                image[ny, nx] = nColor;
+                Tracing(ref image, nx, ny);
+            }
+            nx = x - 1; ny = y + 1;
+            if (nx >= 0 && nx < image.Width && ny >= 0 && ny < image.Height && image[ny, nx].r == 127)
+            {
+                image[ny, nx] = nColor;
+                Tracing(ref image, nx, ny);
+            }
+            nx = x + 1; ny = y;
+            if (nx >= 0 && nx < image.Width && ny >= 0 && ny < image.Height && image[ny, nx].r == 127)
+            {
+                image[ny, nx] = nColor;
+                Tracing(ref image, nx, ny);
+            }
+            nx = x + 1; ny = y - 1;
+            if (nx >= 0 && nx < image.Width && ny >= 0 && ny < image.Height && image[ny, nx].r == 127)
+            {
+                image[ny, nx] = nColor;
+                Tracing(ref image, nx, ny);
+            }
+            nx = x + 1; ny = y + 1;
+            if (nx >= 0 && nx < image.Width && ny >= 0 && ny < image.Height && image[ny, nx].r == 127)
+            {
+                image[ny, nx] = nColor;
+                Tracing(ref image, nx, ny);
+            }
+            nx = x; ny = y + 1;
+            if (nx >= 0 && nx < image.Width && ny >= 0 && ny < image.Height && image[ny, nx].r == 127)
+            {
+                image[ny, nx] = nColor;
+                Tracing(ref image, nx, ny);
+            }
+            nx = x; ny = y - 1;
+            if (nx >= 0 && nx < image.Width && ny >= 0 && ny < image.Height && image[ny, nx].r == 127)
+            {
+                image[ny, nx] = nColor;
+                Tracing(ref image, nx, ny);
+            }
+        }
+
+        protected Image ImageTracing(Image image, int value)
+        {
+            Image result = new Image(image);
+            for (int y = 0; y < result.Height; y++)
+            {
+                for (int x = 0; x < result.Width; x++)
+                {
+                    if (image[y, x].r == value)
+                        Tracing(ref result, x, y);
                 }
             }
 
@@ -133,11 +219,11 @@ namespace IP1.Imaging.Filters
                 for (int x = 0; x < image.Width; x++)
                 {
                     if (image[y, x].r >= up)
-                        result[y, x] = ColorRGB.White;
+                        result[y, x] = new ColorRGB(high, high, high);
                     else if (image[y, x].r >= down)
-                        result[y, x] = new ColorRGB(127, 127, 127);
+                        result[y, x] = new ColorRGB(mid, mid, mid);
                     else
-                        result[y, x] = ColorRGB.Black;
+                        result[y, x] = new ColorRGB(low, low, low);
 
                 }
             }
@@ -154,8 +240,11 @@ namespace IP1.Imaging.Filters
             float[,] gradientAngles;
             result = ToGradient(result, out gradientAngles);
             result = MaxSuppresion(result, gradientAngles);
-            result = DoubleFiltration(result, 140, 153);
+            result = DoubleFiltration(result, lowDF, highDF);
 
+
+            result = ImageTracing(result, high);
+            result = ImageTracing(result, mid);
 
             return result;
         }
